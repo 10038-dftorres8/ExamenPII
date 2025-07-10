@@ -27,6 +27,22 @@ public class ManejadorGlobalExcepciones {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
+    @ExceptionHandler({ TurnoYaAbiertoException.class, TurnoNoAbiertoException.class, DiferenciaEnCierreException.class })
+    public ResponseEntity<Map<String, String>> manejarErroresDeCaja(RuntimeException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Error en gestión de caja");
+        error.put("detalle", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> manejarErroresDeValidacion(IllegalArgumentException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Error de validación");
+        error.put("detalle", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> manejarErroresGenerales(Exception ex) {
         Map<String, String> error = new HashMap<>();
